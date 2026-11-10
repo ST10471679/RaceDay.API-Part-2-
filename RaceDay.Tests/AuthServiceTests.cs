@@ -20,8 +20,8 @@ public class AuthServiceTests
 
         // Seed roles for foreign key dependencies
         context.Roles.AddRange(
-            new Role { RoleId = 1, RoleName = "Admin" },
-            new Role { RoleId = 2, RoleName = "User" }
+            new Role { RoleId = 1, RoleName = "Organiser" },
+            new Role { RoleId = 2, RoleName = "Participant" }
         );
         context.SaveChanges();
 
@@ -50,7 +50,7 @@ public class AuthServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal("test@example.com", result.Email);
-        Assert.Equal("User", result.RoleName);
+        Assert.Equal("Participant", result.RoleName);
     }
 
     [Fact]

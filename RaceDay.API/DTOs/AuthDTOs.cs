@@ -1,4 +1,4 @@
-﻿namespace RaceDay.API.DTOs;
+namespace RaceDay.API.DTOs;
 
 public class RegisterDto
 {
@@ -21,5 +21,8 @@ public class UserResponseDto
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
+    public string UserName => FullName; // the MVC client reads "userName"
     public string RoleName { get; set; } = string.Empty;
+    public string Token { get; set; } = string.Empty;
 }

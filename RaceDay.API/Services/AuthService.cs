@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RaceDay.API.Data;
 using RaceDay.API.DTOs;
 using RaceDay.API.Models;
@@ -8,10 +8,13 @@ namespace RaceDay.API.Services;
 public class AuthService : IAuthService
 {
     private readonly ApplicationDbContext _context;
+    
 
     public AuthService(ApplicationDbContext context)
+
     {
         _context = context;
+       
     }
 
     public async Task<UserResponseDto?> RegisterAsync(RegisterDto dto)
@@ -22,6 +25,9 @@ public class AuthService : IAuthService
             return null;
         }
 
+        // Only the seeded roles are valid (1 = Organiser, 2 = Participant); anything else becomes Participant
+        int roleId = await _context.Roles.AnyAsync(r => r.RoleId == dto.RoleId) ? dto.RoleId : 2;
+
         // Hash the password securely with BCrypt
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
@@ -31,7 +37,7 @@ public class AuthService : IAuthService
             LastName = dto.LastName,
             Email = dto.Email,
             PasswordHash = hashedPassword,
-            RoleId = dto.RoleId
+            RoleId = roleId
         };
 
         _context.Users.Add(user);
@@ -48,7 +54,9 @@ public class AuthService : IAuthService
             FirstName = createdUser.FirstName,
             LastName = createdUser.LastName,
             Email = createdUser.Email,
-            RoleName = createdUser.Role?.RoleName ?? "User"
+            FullName = $"{user.FirstName} {user.LastName}",
+            RoleName = createdUser.Role?.RoleName ?? "Participant",
+            Token = "temporary-token"
         };
     }
 
@@ -75,7 +83,9 @@ public class AuthService : IAuthService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            RoleName = user.Role?.RoleName ?? "User"
+            FullName = $"{user.FirstName} {user.LastName}", // Or user.FirstName + " " + user.LastName
+            RoleName = user.Role?.RoleName ?? "Participant",
+            Token = "temporary-token"
         };
     }
 }

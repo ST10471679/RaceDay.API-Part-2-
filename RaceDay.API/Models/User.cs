@@ -1,4 +1,4 @@
-﻿namespace RaceDay.API.Models;
+namespace RaceDay.API.Models;
 
 public class User
 {
@@ -8,6 +8,9 @@ public class User
     public string Email { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public int RoleId { get; set; }
+
+    // Azure Blob Storage URL of the user's profile picture (nullable)
+    public string? ProfilePictureUrl { get; set; }
 
     // Navigation properties
     public Role Role { get; set; } = null!;
