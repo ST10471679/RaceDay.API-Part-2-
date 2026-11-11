@@ -1,0 +1,177 @@
+/* =====================================================================
+   RaceDay theme  -  tarmac navy, signal orange, chequered-flag accents
+   ===================================================================== */
+:root {
+  --rd-navy: #0b1f3a;
+  --rd-navy-2: #12305a;
+  --rd-orange: #ff5a1f;
+  --rd-orange-dark: #e04a12;
+  --rd-ink: #1b2430;
+  --rd-muted: #66758a;
+  --rd-bg: #f3f5f9;
+  --rd-card: #ffffff;
+  --rd-radius: 14px;
+}
+
+html { font-size: 15px; position: relative; min-height: 100%; }
+@media (min-width: 768px) { html { font-size: 16px; } }
+
+body {
+  font-family: "Barlow", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  background: var(--rd-bg);
+  color: var(--rd-ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.rd-main { flex: 1 0 auto; }
+
+h1, h2, h3, h4, h5, .display-4, .display-6, .rd-brand, .rd-title {
+  font-family: "Barlow Condensed", "Arial Narrow", "Segoe UI", sans-serif;
+  letter-spacing: .02em;
+}
+h1, h2, h3 { text-transform: uppercase; font-weight: 800; }
+
+a { color: var(--rd-orange-dark); }
+a:hover { color: var(--rd-orange); }
+
+/* ---------- navbar ---------- */
+.rd-navbar { background: var(--rd-navy); padding: .6rem 0; }
+.rd-brand {
+  font-size: 1.7rem; font-weight: 800; font-style: italic; text-transform: uppercase;
+  color: #fff !important;
+}
+.rd-brand i { color: var(--rd-orange); margin-right: .15rem; }
+.rd-brand span { color: var(--rd-orange); }
+.rd-navbar .nav-link {
+  color: rgba(255,255,255,.82) !important; font-weight: 500;
+}
+.rd-navbar .nav-link:hover, .rd-navbar .nav-link:focus { color: #fff !important; }
+.rd-navbar .btn-link.nav-link { text-decoration: none; }
+.rd-role-pill {
+  display: inline-block; margin-left: .35rem; padding: .05rem .5rem;
+  font-size: .7rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  border-radius: 999px; background: rgba(255,90,31,.2); color: #ffb08f;
+}
+/* chequered strip under the navbar */
+.rd-checker {
+  height: 10px;
+  background:
+    repeating-conic-gradient(#fff 0% 25%, var(--rd-navy) 0% 50%) 0 0 / 20px 20px;
+  opacity: .9;
+}
+
+/* ---------- footer ---------- */
+.rd-footer {
+  flex-shrink: 0; margin-top: 2rem; padding: 1.1rem 0;
+  background: var(--rd-navy); color: rgba(255,255,255,.7); font-size: .9rem;
+}
+.rd-footer a { color: #fff; text-decoration: none; }
+.rd-footer i { color: var(--rd-orange); }
+
+/* ---------- buttons ---------- */
+.btn { font-weight: 600; border-radius: 10px; }
+.btn-primary {
+  --bs-btn-bg: var(--rd-orange);
+  background-color: var(--rd-orange); border-color: var(--rd-orange); color: #fff;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: var(--rd-orange-dark) !important; border-color: var(--rd-orange-dark) !important; color: #fff;
+}
+.btn-outline-primary { color: var(--rd-orange-dark); border-color: var(--rd-orange); }
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+  background-color: var(--rd-orange); border-color: var(--rd-orange); color: #fff;
+}
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-select:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 .2rem rgba(255,90,31,.25);
+  border-color: var(--rd-orange);
+}
+.form-check-input:checked { background-color: var(--rd-orange); border-color: var(--rd-orange); }
+
+/* Bootstrap "primary" utilities re-coloured to the theme */
+.bg-primary { background-color: var(--rd-navy) !important; }
+.text-primary { color: var(--rd-orange-dark) !important; }
+.badge.bg-primary { background-color: var(--rd-orange) !important; }
+.badge.bg-secondary { background-color: var(--rd-navy-2) !important; }
+
+/* ---------- cards ---------- */
+.card { border-radius: var(--rd-radius); background: var(--rd-card); }
+.card-header { border-top-left-radius: var(--rd-radius) !important; border-top-right-radius: var(--rd-radius) !important; }
+.table > :not(caption) > * > * { padding: .85rem .9rem; }
+.table-light, .table-light > th, .table thead.table-light th {
+  background-color: #eaeef5 !important;
+  font-family: "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: .05em;
+}
+
+/* ---------- hero ---------- */
+.rd-hero {
+  position: relative; overflow: hidden; color: #fff;
+  background:
+    repeating-linear-gradient(115deg, rgba(255,255,255,.04) 0 14px, transparent 14px 28px),
+    linear-gradient(135deg, var(--rd-navy) 0%, var(--rd-navy-2) 100%);
+  border-radius: var(--rd-radius); padding: 3rem 2.2rem; margin-bottom: 1.6rem;
+  box-shadow: 0 .5rem 1.5rem rgba(11,31,58,.25);
+}
+.rd-hero::after {
+  content: ""; position: absolute; right: 0; bottom: 0; width: 100%; height: 12px;
+  background: repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%) 0 0 / 24px 24px;
+  opacity: .25;
+}
+.rd-hero h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); font-style: italic; margin-bottom: .4rem; }
+.rd-hero h1 em { color: var(--rd-orange); font-style: italic; }
+.rd-hero p { max-width: 36rem; color: rgba(255,255,255,.85); font-size: 1.1rem; margin-bottom: 0; }
+
+/* ---------- page headings ---------- */
+.rd-title { font-size: 2rem; margin: 0; }
+.rd-title::after {
+  content: ""; display: block; width: 54px; height: 5px; margin-top: .3rem;
+  background: var(--rd-orange); border-radius: 3px;
+}
+
+/* ---------- event cards & banners ---------- */
+.event-card { transition: transform .15s ease, box-shadow .15s ease; overflow: hidden; }
+.event-card:hover { transform: translateY(-4px); box-shadow: 0 .8rem 1.6rem rgba(11,31,58,.15) !important; }
+.event-card .card-img-top, .event-card .banner-placeholder { height: 180px; object-fit: cover; }
+
+.banner-placeholder {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: .6rem;
+  min-height: 180px; color: #fff; font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.6rem; font-weight: 800; font-style: italic; text-transform: uppercase; letter-spacing: .06em;
+  background:
+    repeating-linear-gradient(115deg, rgba(255,255,255,.06) 0 14px, transparent 14px 28px),
+    linear-gradient(135deg, var(--rd-navy) 0%, var(--rd-orange) 140%);
+}
+.banner-placeholder i { color: var(--rd-orange); font-size: 1.9rem; }
+.banner-placeholder::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 10px;
+  background: repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%) 0 0 / 20px 20px; opacity: .35;
+}
+.banner-placeholder.banner-lg { min-height: 300px; font-size: 2.4rem; }
+.banner-img-lg { max-height: 350px; width: 100%; object-fit: cover; }
+
+/* ---------- dashboard stat tiles ---------- */
+.stat-tile {
+  border: 0; border-radius: var(--rd-radius); color: #fff; padding: 1.1rem 1.3rem; height: 100%;
+  box-shadow: 0 .35rem 1rem rgba(11,31,58,.15);
+}
+.stat-tile .label {
+  font-family: "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: .08em; opacity: .8; font-size: .95rem;
+}
+.stat-tile .value { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 3rem; line-height: 1.05; }
+.stat-navy   { background: linear-gradient(135deg, var(--rd-navy), var(--rd-navy-2)); }
+.stat-orange { background: linear-gradient(135deg, var(--rd-orange), #ff8a4d); }
+.stat-green  { background: linear-gradient(135deg, #157347, #20a566); }
+.stat-slate  { background: linear-gradient(135deg, #2b3445, #46526b); }
+
+/* ---------- results ---------- */
+.rd-time { font-family: "Barlow Condensed", "Consolas", monospace; font-size: 1.35rem; font-weight: 700; color: var(--rd-navy); }
+.rd-place { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--rd-orange-dark); }
+.rd-podium-1 { color: #c99700; } .rd-podium-2 { color: #7d8794; } .rd-podium-3 { color: #a8642c; }
+
+/* ---------- misc ---------- */
+.empty-state i { font-size: 3rem; color: #b6c0cf; }
+.list-group-item.rd-category { border-radius: 12px !important; border: 2px solid #e3e8f0; }
+.rd-category:has(input:checked) { border-color: var(--rd-orange); background: #fff6f2; }
+.rd-category.rd-full { opacity: .85; }
+.rd-actions .btn { white-space: nowrap; }
+.rd-avatar { width: 150px; height: 150px; object-fit: cover; border: 4px solid var(--rd-orange) !important; }

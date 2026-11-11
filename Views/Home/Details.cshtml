@@ -1,0 +1,148 @@
+@model EventDto
+
+@{
+    ViewData["Title"] = Model.Name;
+    var loggedIn = Context.Session.IsLoggedIn();
+    var isOrganiser = Context.Session.IsOrganiser();
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index">Events</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<!-- Banner -->
+<div class="card border-0 shadow-sm overflow-hidden mb-4">
+    @if (!string.IsNullOrEmpty(Model.BannerImageUrl))
+    {
+        <img src="@Model.BannerImageUrl" class="card-img-top banner-img-lg" alt="@Model.Name" />
+    }
+    else
+    {
+        <div class="banner-placeholder banner-lg"><i class="bi bi-flag-fill"></i> @Model.Name</div>
+    }
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+            <div>
+                <span class="badge bg-primary mb-2">@Model.EventType</span>
+                <h1 class="display-6 fw-bold mb-1">@Model.Name</h1>
+            </div>
+            <span class="badge bg-light text-dark border fs-6">@Model.Distance</span>
+        </div>
+        <p class="text-muted fs-5 mb-0">@Model.Description</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Event information -->
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-light fw-bold py-3">Event Information</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="text-muted small d-block">Date &amp; Time</label>
+                    <span class="fw-semibold"><i class="bi bi-calendar-event me-2"></i>@Model.Date.ToString("dddd, MMMM dd, yyyy @ HH:mm")</span>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small d-block">Location</label>
+                    <span class="fw-semibold"><i class="bi bi-geo-alt me-2"></i>@Model.Location</span>
+                </div>
+                <div>
+                    <label class="text-muted small d-block">Event Type</label>
+                    <span class="fw-semibold"><i class="bi bi-trophy me-2"></i>@Model.EventType</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category selection & enrolment -->
+    <div class="col-md-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-light fw-bold py-3">Select Category &amp; Enrol</div>
+            <div class="card-body">
+                @if (Model.Categories == null || !Model.Categories.Any())
+                {
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-0">No categories have been set up for this event yet.</p>
+                    </div>
+                }
+                else if (!loggedIn)
+                {
+                    <p class="text-muted">Log in or create an account to enrol in this event.</p>
+                    <div class="list-group mb-3">
+                        @foreach (var cat in Model.Categories)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold">@cat.Name</span>
+                                    <div class="text-muted small">Distance: @cat.Distance</div>
+                                </div>
+                                <span class="badge bg-success rounded-pill fs-6">@(cat.EntryFee > 0 ? "R " + cat.EntryFee.ToString("N2") : "Free")</span>
+                            </div>
+                        }
+                    </div>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary w-100">Log in to enrol</a>
+                }
+                else if (isOrganiser)
+                {
+                    <div class="list-group mb-3">
+                        @foreach (var cat in Model.Categories)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold">@cat.Name</span>
+                                    <div class="text-muted small">Distance: @cat.Distance &middot; @cat.EnrolledCount enrolled</div>
+                                </div>
+                                <span class="badge bg-success rounded-pill fs-6">@(cat.EntryFee > 0 ? "R " + cat.EntryFee.ToString("N2") : "Free")</span>
+                            </div>
+                        }
+                    </div>
+                    <p class="text-muted small mb-0">You are signed in as an organiser. Switch to a participant account to enter races.</p>
+                }
+                else
+                {
+                    <form id="enrolForm" asp-controller="Enrolment" asp-action="Enrol" method="post">
+                        <input type="hidden" name="eventId" value="@Model.Id" />
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Available Categories</label>
+                            <div class="list-group">
+                                @for (int i = 0; i < Model.Categories.Count; i++)
+                                {
+                                    var cat = Model.Categories[i];
+                                    <label class="list-group-item rd-category d-flex justify-content-between align-items-center mb-2 @(cat.IsFull ? "rd-full" : "")" for="cat_@cat.Id">
+                                        <span>
+                                            <input class="form-check-input me-2" type="radio" name="categoryId" value="@cat.Id" id="cat_@cat.Id" checked="@(i == 0)" />
+                                            <span class="fw-bold">@cat.Name</span>
+                                            <span class="d-block text-muted small ms-4">
+                                                Distance: @cat.Distance
+                                                @if (cat.MaxParticipants > 0)
+                                                {
+                                                    if (cat.IsFull)
+                                                    {
+                                                        <text>&middot; <span class="text-danger fw-semibold">Full &ndash; waiting list</span></text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <text>&middot; @(cat.MaxParticipants - cat.EnrolledCount) places left</text>
+                                                    }
+                                                }
+                                            </span>
+                                        </span>
+                                        <span class="badge bg-success rounded-pill fs-6">@(cat.EntryFee > 0 ? "R " + cat.EntryFee.ToString("N2") : "Free")</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
+                            <i class="bi bi-check2-circle"></i> Confirm &amp; Enrol Now
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

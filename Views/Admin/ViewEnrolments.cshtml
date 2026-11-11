@@ -1,0 +1,53 @@
+@model IEnumerable<EnrolmentDto>
+
+@{
+    ViewData["Title"] = "Event Enrolments";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h2 class="rd-title">Enrolled Participants</h2>
+        <div class="text-muted mt-2">@ViewBag.EventName</div>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back to Dashboard</a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="text-center py-5 empty-state">
+                <i class="bi bi-people"></i>
+                <p class="text-muted mt-2 mb-0">No participants have enrolled for this event yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Participant</th>
+                            <th>Category</th>
+                            <th>Enrolled On</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var badgeClass = item.Status == "Confirmed" ? "bg-success" :
+                                             item.Status == "Pending" ? "bg-warning text-dark" : "bg-secondary";
+                            <tr>
+                                <td class="fw-semibold">@item.UserName</td>
+                                <td><span class="badge bg-secondary">@item.CategoryName</span></td>
+                                <td>@item.EnrolmentDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                                <td><span class="badge @badgeClass">@(item.Status == "Pending" ? "Waiting list" : item.Status)</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

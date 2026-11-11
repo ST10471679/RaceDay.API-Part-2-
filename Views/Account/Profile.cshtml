@@ -1,0 +1,53 @@
+@model RaceDay.Web.Models.DTOs.UserProfileDto
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold py-3">My Profile</div>
+                <div class="card-body p-4">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <div class="alert alert-danger">@error.ErrorMessage</div>
+                        }
+                    }
+
+                    <div class="text-center mb-4">
+                        <img src="@(!string.IsNullOrEmpty(Model.ProfilePictureUrl) ? Model.ProfilePictureUrl : "data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27150%27 height=%27150%27%3E%3Crect width=%27150%27 height=%27150%27 fill=%27%23dee2e6%27/%3E%3Ccircle cx=%2775%27 cy=%2760%27 r=%2728%27 fill=%27%23adb5bd%27/%3E%3Crect x=%2735%27 y=%27100%27 width=%2780%27 height=%2750%27 rx=%2725%27 fill=%27%23adb5bd%27/%3E%3C/svg%3E")"
+                             class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture" />
+                    </div>
+
+                    <form asp-action="Profile" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Email Address</label>
+                            <input type="text" class="form-control" value="@Model.Email" disabled />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Username / Full Name</label>
+                            <input asp-for="UserName" class="form-control" required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Upload New Profile Picture</label>
+                            <input type="file" name="ProfilePicture" class="form-control" accept="image/*" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+@model EnterResultsViewModel
+
+@{
+    ViewData["Title"] = "Enter Race Results";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h2 class="rd-title">Capture Race Results</h2>
+        <div class="text-muted mt-2">@Model.EventName</div>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back to Dashboard</a>
+</div>
+
+@if (!Model.Rows.Any())
+{
+    <div class="card border-0 shadow-sm text-center py-5 empty-state">
+        <div class="card-body">
+            <i class="bi bi-people"></i>
+            <p class="text-muted mt-2 mb-0">Nobody has enrolled yet, so there is nobody to capture results for.</p>
+        </div>
+    </div>
+}
+else
+{
+    <form asp-action="SaveResults" method="post">
+        <input type="hidden" asp-for="EventId" />
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Participant</th>
+                                <th>Category</th>
+                                <th style="min-width: 190px;">Finish time (hh:mm:ss)</th>
+                                <th style="min-width: 130px;">Position</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Rows.Count; i++)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">
+                                        @Model.Rows[i].UserName
+                                        <input type="hidden" asp-for="Rows[i].UserId" />
+                                        <input type="hidden" asp-for="Rows[i].UserName" />
+                                        <input type="hidden" asp-for="Rows[i].CategoryName" />
+                                    </td>
+                                    <td><span class="badge bg-secondary">@Model.Rows[i].CategoryName</span></td>
+                                    <td>
+                                        <input asp-for="Rows[i].FinishTime" class="form-control" placeholder="00:45:30" autocomplete="off" />
+                                        <span asp-validation-for="Rows[i].FinishTime" class="text-danger small"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="Rows[i].Position" type="number" min="1" class="form-control" placeholder="auto" />
+                                        <span asp-validation-for="Rows[i].Position" class="text-danger small"></span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-white d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+                <span class="text-muted small">
+                    <i class="bi bi-info-circle"></i>
+                    Leave a time blank for a DNF. Leave positions blank to rank everyone automatically by finish time.
+                </span>
+                <button type="submit" class="btn btn-success"><i class="bi bi-cloud-check"></i> Save &amp; Publish Results</button>
+            </div>
+        </div>
+    </form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

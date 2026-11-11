@@ -1,0 +1,79 @@
+@model IEnumerable<EventDto>
+
+@{
+    ViewData["Title"] = "Upcoming Events";
+}
+
+<div class="rd-hero">
+    <h1>Find your <em>next race</em></h1>
+    <p>Browse upcoming running, cycling and multisport events. Sign up, compete and track your results on RaceDay.</p>
+</div>
+
+<!-- Search & filtering -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-3">
+        <form method="get" asp-action="Index" class="row g-2 align-items-center">
+            <div class="col-md-6">
+                <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control" placeholder="Search by event name or location..." />
+            </div>
+            <div class="col-md-4">
+                <select name="eventType" class="form-select">
+                    <option value="All">All Event Types</option>
+                    <option value="Running" selected="@(ViewBag.EventType == "Running")">Running</option>
+                    <option value="Cycling" selected="@(ViewBag.EventType == "Cycling")">Cycling</option>
+                    <option value="Triathlon" selected="@(ViewBag.EventType == "Triathlon")">Triathlon</option>
+                    <option value="Trail Run" selected="@(ViewBag.EventType == "Trail Run")">Trail Run</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Event cards -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @if (Model == null || !Model.Any())
+    {
+        <div class="col-12 text-center py-5 empty-state">
+            <i class="bi bi-flag"></i>
+            <p class="text-muted fs-5 mt-2">No upcoming events match your search right now.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var race in Model)
+        {
+            <div class="col">
+                <div class="card event-card h-100 border-0 shadow-sm">
+                    @if (!string.IsNullOrEmpty(race.BannerUrl))
+                    {
+                        <img src="@race.BannerUrl" class="card-img-top" alt="@race.Name" />
+                    }
+                    else
+                    {
+                        <div class="banner-placeholder"><i class="bi bi-flag-fill"></i> RaceDay</div>
+                    }
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary">@race.EventType</span>
+                            <span class="badge bg-light text-dark border">@race.Distance</span>
+                        </div>
+                        <h5 class="card-title fw-bold">@race.Name</h5>
+                        <p class="card-text text-muted text-truncate mb-2">@race.Description</p>
+                        <p class="card-text small text-secondary mb-1">
+                            <i class="bi bi-calendar-event me-1"></i> @race.Date.ToString("MMM dd, yyyy @ HH:mm")
+                        </p>
+                        <p class="card-text small text-secondary mb-0">
+                            <i class="bi bi-geo-alt me-1"></i> @race.Location
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pt-0 pb-3">
+                        <a asp-action="Details" asp-route-id="@race.Id" class="btn btn-outline-primary w-100">View Details &amp; Enrol</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

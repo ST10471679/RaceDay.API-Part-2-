@@ -1,0 +1,123 @@
+@model ManageCategoriesViewModel
+
+@{
+    ViewData["Title"] = "Manage Categories";
+    var cats = Model.Event.Categories;
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Event.Name</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <h2 class="rd-title">Race Categories</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back to Dashboard</a>
+</div>
+<p class="text-muted">Participants pick one of these when they enrol for <strong>@Model.Event.Name</strong>. An event can have as many as you like.</p>
+
+<div class="row g-4">
+    <!-- Existing categories -->
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white fw-bold py-3">Categories for this event (@cats.Count)</div>
+            <div class="card-body p-0">
+                @if (!cats.Any())
+                {
+                    <div class="text-center py-5 empty-state">
+                        <i class="bi bi-tags"></i>
+                        <p class="text-muted mt-2 mb-0">No categories yet. Add the first one using the form.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Distance</th>
+                                    <th>Fee</th>
+                                    <th>Places</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var cat in cats)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@cat.Name</td>
+                                        <td>@cat.Distance</td>
+                                        <td>@(cat.EntryFee > 0 ? "R " + cat.EntryFee.ToString("N2") : "Free")</td>
+                                        <td>
+                                            @cat.EnrolledCount
+                                            @(cat.MaxParticipants > 0 ? " / " + cat.MaxParticipants : " (no limit)")
+                                        </td>
+                                        <td class="text-end">
+                                            @if (cat.EnrolledCount == 0)
+                                            {
+                                                <form asp-action="DeleteCategory" method="post" class="d-inline"
+                                                      onsubmit="return confirm('Remove this category?');">
+                                                    <input type="hidden" name="eventId" value="@Model.Event.Id" />
+                                                    <input type="hidden" name="categoryId" value="@cat.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small">In use</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Add a category -->
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white fw-bold py-3">Add a category</div>
+            <div class="card-body">
+                <form asp-action="AddCategory" method="post">
+                    <input type="hidden" asp-for="NewCategory.EventId" />
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="NewCategory.Name" class="form-label fw-semibold">Name</label>
+                        <input asp-for="NewCategory.Name" class="form-control" placeholder="e.g. 10km Run" />
+                        <span asp-validation-for="NewCategory.Name" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewCategory.Distance" class="form-label fw-semibold">Distance</label>
+                        <input asp-for="NewCategory.Distance" class="form-control" placeholder="e.g. 10km" />
+                        <span asp-validation-for="NewCategory.Distance" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label asp-for="NewCategory.EntryFee" class="form-label fw-semibold">Entry fee (R)</label>
+                            <input asp-for="NewCategory.EntryFee" type="number" step="0.01" min="0" class="form-control" />
+                            <span asp-validation-for="NewCategory.EntryFee" class="text-danger"></span>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label asp-for="NewCategory.MaxParticipants" class="form-label fw-semibold">Max places</label>
+                            <input asp-for="NewCategory.MaxParticipants" type="number" min="0" class="form-control" />
+                            <div class="form-text">0 = no limit</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-plus-circle"></i> Add Category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

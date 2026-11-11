@@ -1,0 +1,74 @@
+@model CreateEventDto
+
+@{
+    ViewData["Title"] = "Create New Event";
+}
+
+<h2 class="rd-title mb-4">Create New Event</h2>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <form asp-action="CreateEvent" method="post" enctype="multipart/form-data" class="col-lg-9 px-0">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="EventName" class="form-label fw-semibold">Event Name</label>
+                <input asp-for="EventName" class="form-control" />
+                <span asp-validation-for="EventName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EventDate" class="form-label fw-semibold">Event Date &amp; Time</label>
+                    <input asp-for="EventDate" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="EventDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Location" class="form-label fw-semibold">Location</label>
+                    <input asp-for="Location" class="form-control" />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Distance" class="form-label fw-semibold">Main Distance (e.g. 21km)</label>
+                    <input asp-for="Distance" class="form-control" />
+                    <span asp-validation-for="Distance" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EventType" class="form-label fw-semibold">Event Type</label>
+                    <input asp-for="EventType" class="form-control" list="eventTypes" placeholder="Running, Cycling, Triathlon..." />
+                    <datalist id="eventTypes">
+                        <option value="Running"></option>
+                        <option value="Cycling"></option>
+                        <option value="Triathlon"></option>
+                        <option value="Trail Run"></option>
+                    </datalist>
+                    <span asp-validation-for="EventType" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="BannerImage" class="form-label fw-semibold">Event Banner Image (optional)</label>
+                <input asp-for="BannerImage" type="file" class="form-control" accept="image/png,image/jpeg,image/gif,image/webp" />
+                <div class="form-text">JPG, PNG, GIF or WEBP, up to 5 MB.</div>
+            </div>
+
+            <p class="text-muted small"><i class="bi bi-info-circle"></i> After saving you can add the race categories (distances, fees and limits) people can enter.</p>
+
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check2"></i> Create Event</button>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

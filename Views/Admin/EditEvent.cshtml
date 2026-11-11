@@ -1,0 +1,84 @@
+@model EditEventDto
+
+@{
+    ViewData["Title"] = "Edit Event";
+}
+
+<h2 class="rd-title mb-4">Edit Event</h2>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <form asp-action="EditEvent" method="post" enctype="multipart/form-data" class="col-lg-9 px-0">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="EventName" class="form-label fw-semibold">Event Name</label>
+                <input asp-for="EventName" class="form-control" />
+                <span asp-validation-for="EventName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EventDate" class="form-label fw-semibold">Event Date &amp; Time</label>
+                    <input asp-for="EventDate" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="EventDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Location" class="form-label fw-semibold">Location</label>
+                    <input asp-for="Location" class="form-control" />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Distance" class="form-label fw-semibold">Main Distance</label>
+                    <input asp-for="Distance" class="form-control" />
+                    <span asp-validation-for="Distance" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EventType" class="form-label fw-semibold">Event Type</label>
+                    <input asp-for="EventType" class="form-control" list="eventTypes" />
+                    <datalist id="eventTypes">
+                        <option value="Running"></option>
+                        <option value="Cycling"></option>
+                        <option value="Triathlon"></option>
+                        <option value="Trail Run"></option>
+                    </datalist>
+                    <span asp-validation-for="EventType" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Event Banner</label>
+                @if (!string.IsNullOrEmpty(Model.ExistingBannerUrl))
+                {
+                    <div class="mb-2">
+                        <img src="@Model.ExistingBannerUrl" alt="Current banner" class="img-thumbnail" style="max-height: 150px;" />
+                    </div>
+                    <div class="form-check mb-2">
+                        <input asp-for="RemoveBanner" class="form-check-input" />
+                        <label asp-for="RemoveBanner" class="form-check-label">Remove the current banner</label>
+                    </div>
+                }
+                <input asp-for="BannerImage" type="file" class="form-control" accept="image/png,image/jpeg,image/gif,image/webp" />
+                <div class="form-text">Choose a file to replace the banner. JPG, PNG, GIF or WEBP, up to 5 MB.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check2"></i> Save Changes</button>
+            <a asp-action="ManageCategories" asp-route-id="@Model.Id" class="btn btn-outline-dark ms-2"><i class="bi bi-tags"></i> Categories</a>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
